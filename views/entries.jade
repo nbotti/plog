@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1.
+    Entries List
+  ul
+    each entry, i in entrylist
+      li
+        pre(class="a")=entry

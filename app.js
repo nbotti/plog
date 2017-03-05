@@ -5,8 +5,14 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var Datastore = require('nedb')
+
 var index = require('./routes/index');
 var users = require('./routes/users');
+
+var db = {}
+db.entries = new Datastore('data/entries.db')
+db.entries.loadDatabase();
 
 var app = express();
 
@@ -21,6 +27,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Make our db accessible to our router
+app.use(function(req,res,next){
+    req.db = db;
+    next();
+});
 
 app.use('/', index);
 app.use('/users', users);
